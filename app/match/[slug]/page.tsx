@@ -1,4 +1,5 @@
-export default function Match() {
+export default function Match({ params }: { params: { slug: string } }) {
+  console.log(params);
   // Get match by id
   // Populate fields
   // If in progress - show timer + score buttons (2,3,4)

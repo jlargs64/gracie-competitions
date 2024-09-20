@@ -2,6 +2,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { MatchResult, MatchState } from '@/lib/match-types';
 import { CircleCheck, CircleX } from 'lucide-react';
 import React from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 interface MatchCardProps {
   competitorA: string;
@@ -15,8 +21,10 @@ const MatchCard: React.FC<MatchCardProps> = ({
   competitorA,
   competitorB,
   winner,
+  result,
   state = MatchState.PENDING,
 }) => {
+  // Decide match color
   let matchColor = '';
   switch (state) {
     case MatchState.IN_PROGRESS:
@@ -29,17 +37,21 @@ const MatchCard: React.FC<MatchCardProps> = ({
       matchColor = 'outline outline-green-600';
       break;
   }
+
+  // Dynamically render match contents
   let matchContents = undefined;
   if (winner) {
     const loser = winner !== competitorA ? competitorA : competitorB;
     matchContents = (
       <>
-        <p>
-          {winner} <CircleCheck />
-        </p>
-        <p>
-          {loser} <CircleX />
-        </p>
+        <div className="flex flex-row justify-between py-2">
+          <p className="text-xl">{winner}</p>
+          <CircleCheck color="green" />
+        </div>
+        <div className="flex flex-row justify-between py-2">
+          <p className="text-xl">{loser}</p>
+          <CircleX color="red" />
+        </div>
       </>
     );
   } else {
@@ -50,11 +62,27 @@ const MatchCard: React.FC<MatchCardProps> = ({
       </>
     );
   }
-  return (
+  const card = (
     <Card className={`w-1/2 my-4 px-2 pt-4 ${matchColor}`}>
-      {/* <CardHeader>{state}</CardHeader> */}
       <CardContent className="divide-y-2">{matchContents}</CardContent>
     </Card>
   );
+
+  if (winner && result) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="w-1/2">{card}</TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {winner} by {result}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  } else {
+    return card;
+  }
 };
 export default MatchCard;

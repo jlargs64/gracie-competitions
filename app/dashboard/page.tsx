@@ -1,6 +1,6 @@
 import MatchCard from '@/components/match';
 import { TypographyH1 } from '@/components/typography/typography';
-import { MatchState } from '@/lib/match-types';
+import { MatchResult, MatchState } from '@/lib/match-types';
 
 export default function Dashboard() {
   /**
@@ -11,12 +11,14 @@ export default function Dashboard() {
         5. Handle edge cases for 1 competitor/ even competitors/ etc. (Use algo to generate rank)
    */
   return (
-    <div className="container mx-auto px-2 lg:w-2/3 sm:w-full items-center justify-items-center pb-20 gap-16 sm:p-20">
+    <div className="container mx-auto px-2 items-center justify-items-center pb-20 gap-16 sm:p-20">
       <TypographyH1>Dashboard</TypographyH1>
       <MatchCard
         competitorA="Justin"
         competitorB="Doofus"
-        state={MatchState.CANCELLED}
+        winner="Justin"
+        result={MatchResult.SUBMISSION}
+        state={MatchState.END}
       />
     </div>
   );
