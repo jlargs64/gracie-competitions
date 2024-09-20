@@ -1,7 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { LogIn, LogOut, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -21,10 +28,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated, login, logout } = useAuth();
 
-  const publicNavItems = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-  ];
+  const publicNavItems = [{ name: 'About', href: '/about' }];
 
   const protectedNavItems = [
     { name: 'Dashboard', href: '/dashboard' },
@@ -32,7 +36,7 @@ export default function Navbar() {
   ];
 
   const navItems = isAuthenticated
-    ? [...publicNavItems, ...protectedNavItems]
+    ? [...protectedNavItems, ...publicNavItems]
     : publicNavItems;
 
   const isActive = (href: string) => pathname === href;
@@ -50,6 +54,17 @@ export default function Navbar() {
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
+              <Link
+                key="home"
+                href="/"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/')
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                }`}
+              >
+                Home
+              </Link>
               {navItems.map((item) => (
                 <Link
                   key={item.name}
@@ -79,6 +94,16 @@ export default function Navbar() {
           </div>
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTitle>
+                <VisuallyHidden.Root>
+                  Mobile Navigation Menu
+                </VisuallyHidden.Root>
+              </SheetTitle>
+              <SheetDescription>
+                <VisuallyHidden.Root>
+                  This is the mobile navigation menu.
+                </VisuallyHidden.Root>
+              </SheetDescription>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="h-6 w-6" />
